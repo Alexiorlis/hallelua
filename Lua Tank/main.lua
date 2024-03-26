@@ -43,6 +43,17 @@ local function fireLaser(event)
     end
 end
 
+local function cpuLaser()
+    local newLaser = display.newImageRect( mainGroup, "bullet.png" , 10,10 )
+    physics.addBody( newLaser, "dynamic", { isSensor=true } )
+    newLaser.isBullet = true
+    newLaser.myName = "laser"
+    
+    newLaser.x = cpu.x
+    newLaser.y = cpu.y
+    transition.to( newLaser, { x=tank.x, y=tank.y, time=500, onComplete = function() display.remove( newLaser ) end} )
+end
+
 local function moveTank( event )
     local phase = event.phase
  
@@ -71,10 +82,11 @@ Runtime:addEventListener("key", moveTank)
 
 local function moveCPU()
     cpu:setLinearVelocity( math.random( -20,20 ), math.random( -20,20 ) )
+    cpuLaser()
 end
 
 local function gameLoop ()
     moveCPU()
 end
 
-gameLoopTimer = timer.performWithDelay(500, gameLoop, 0)
+gameLoopTimer = timer.performWithDelay(1000, gameLoop, 0)
