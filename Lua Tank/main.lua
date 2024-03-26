@@ -39,7 +39,7 @@ local function fireLaser(event)
         
         newLaser.x = tank.x
         newLaser.y = tank.y
-        transition.to( newLaser, { y=-40, time=500, onComplete = function() display.remove( newLaser ) end} )
+        transition.to( newLaser, { x=cpu.x, y=cpu.y, time=500, onComplete = function() display.remove( newLaser ) end} )
     end
 end
 
