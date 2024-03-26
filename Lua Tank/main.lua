@@ -20,29 +20,61 @@ background.y = display.contentCenterY
 
 local tank = display.newImageRect(mainGroup, "tank.png", 20, 20)
 tank.x = display.contentCenterX
-tank.y = display.contentCenterY
+tank.y = display.contentCenterY+100
 physics.addBody( tank, { radius=30, isSensor=true } )
 tank.myName = "tank"
 
-local function dragTank( event )
- 
-    local tank = event.target
+local cpu = display.newImageRect(mainGroup, "cpu.png", 20, 20)
+cpu.x = display.contentCenterX
+cpu.y = display.contentCenterY-100
+physics.addBody( cpu, { radius=30, isSensor=true } )
+cpu.myName = "cpu"
+
+local function fireLaser(event)
+    if (event.keyName == "space" and event.phase == "down") then
+        local newLaser = display.newImageRect( mainGroup, "bullet.png" , 10,10 )
+        physics.addBody( newLaser, "dynamic", { isSensor=true } )
+        newLaser.isBullet = true
+        newLaser.myName = "laser"
+        
+        newLaser.x = tank.x
+        newLaser.y = tank.y
+        transition.to( newLaser, { y=-40, time=500, onComplete = function() display.remove( newLaser ) end} )
+    end
+end
+
+local function moveTank( event )
     local phase = event.phase
  
-    if ( "began" == phase ) then
+    if (event.keyName == "w" and "down" == phase ) then
         -- Set touch focus on the ship
         display.currentStage:setFocus( tank )
-        tank.touchOffsetX = event.x - tank.x
-        tank.touchOffsetY = event.y - tank.y
-    elseif ( "moved" == phase ) then
-        -- Move the ship to the new touch position
-        tank.x = event.x - tank.touchOffsetX
-        tank.y = event.y - tank.touchOffsetY
-    elseif ( "ended" == phase or "cancelled" == phase ) then
-        -- Release touch focus on the ship
-        display.currentStage:setFocus( nil )
+        tank.y = tank.y - 10
+    elseif (event.keyName == "a" and "down" == phase ) then
+        -- Set touch focus on the ship
+        display.currentStage:setFocus( tank )
+        tank.x = tank.x - 10
+    elseif (event.keyName == "s" and "down" == phase ) then
+        -- Set touch focus on the ship
+        display.currentStage:setFocus( tank )
+        tank.y = tank.y + 10
+    elseif (event.keyName == "d" and "down" == phase ) then
+        -- Set touch focus on the ship
+        display.currentStage:setFocus( tank )
+        tank.x = tank.x + 10
     end
     return true
 end
 
-tank:addEventListener("touch", dragTank)
+Runtime:addEventListener( "key", fireLaser )
+Runtime:addEventListener("key", moveTank)
+
+local function moveCPU()
+    cpu:setLinearVelocity( math.random( -20,20 ), math.random( -20,20 ) )
+end
+
+local function gameLoop ()
+    moveCPU()
+end
+
+gameLoopTimer = timer.performWithDelay(500, gameLoop, 0)
