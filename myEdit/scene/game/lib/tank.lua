@@ -25,9 +25,9 @@ function M.new(tank, options)
 	local x, y = tank.x, tank.y
 
     -- Load tank
-    local tank = display.newImageRect("scene/game/img/tank.png", 200, 200)
-    tank.x = x
-    tank.y = y
+    local tank = display.newImageRect("scene/game/img/tank.png", 100, 100)
+    tank.x = display.contentCenterX
+    tank.y = display.contentCenterY+100
 
     --Add physics
     --May need to add more physics later
@@ -41,7 +41,7 @@ function M.new(tank, options)
 	-- tank.anchorY = 0.77
 
     --Keyboard controls for direction (left, right, up, down)
-    local acceleration, left, right, moveup, movedown, flip = 50, 0, 0, 0, 0, 0
+    local acceleration, left, right, moveup, movedown, flip = 25, 0, 0, 0, 0, 0
     local lastEvent = {}
     
     -- Sets variables when they keys are pressed

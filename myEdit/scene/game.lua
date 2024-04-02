@@ -46,9 +46,9 @@ function scene:create(event)
 
 
     -- Loading map (hardcoded for now)
-    local background = display.newImageRect(sceneGroup, "background.png", 570, 360)
-    -- background.x = display.contentCenterX
-    -- background.y = display.contentCenterY
+    local background = display.newImageRect(sceneGroup, "scene/game/map/background.png", display.contentWidth, display.contentHeight)
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
 
     -- Load our map
     --***This is for loading the map that is created and NOT the background
@@ -63,7 +63,7 @@ function scene:create(event)
 	-- tank.filename = filename
 
     --calling tank (hardcoded)
-    local tank = tank.new(display.newImageRect("scene/game/img/tank.png", 100, 100))
+    local tank = tank.new(display.newImageRect("scene/game/img/tank.png", 5, 10))
     end
 
 --eventListeners
