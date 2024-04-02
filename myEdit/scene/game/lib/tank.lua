@@ -41,6 +41,26 @@ function M.new(tank, startAngle)
     -- tank.isFixedRotation = true
 	-- tank.anchorY = 0.77
 
+    --bullet function
+    local function createBullet() 
+        --local bullet = display.newImageRect("scene/game/img/bullet.png", tank.x, tank.y, 5, 5)
+        local bullet = display.newCircle(tank.x, tank.y, 5)
+        physics.addBody(bullet, "dynamic", {radius = 5})
+        bullet.isBullet = true
+        bullet.shootBullet = "bullet"
+
+        --Finds direction tank is facing
+        local angle = math.rad(tank.rotation)
+        local speed = -1000
+        local vx = math.cos(angle) * speed
+        local vy = math.sin(angle) * speed
+
+        --applies force to the bullet
+        bullet:setLinearVelocity(vx, vy)
+
+        return bullet
+    end    
+
     --Keyboard controls for direction (left, right, up, down)
     local acceleration, left, right, moveup, movedown, flip = 25, 0, 0, 0, 0, 0
     local lastEvent = {}
@@ -86,6 +106,11 @@ function M.new(tank, startAngle)
             --move down *refers to direction down
             if "down" == name or "s" == name then
                 movedown = acceleration
+            end
+            -- shoot bullet
+            --move down *refers to direction down
+            if "space" == name then
+                local bullet = createBullet()
             end
         --phase == "up" refers to no keys being pressed and not direction up. Basically do nothing
         elseif phase == "up" then
