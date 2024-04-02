@@ -52,7 +52,7 @@ function scene:create(event)
 
 	local wall = display.newImageRect(sceneGroup, "scene/game/map/wall.png", 100, 100)
 	wall.x = display.contentCenterX+500
-    wall.y = display.contentCenterY-100
+    wall.y = display.contentCenterY-150
 	physics.addBody( wall, "static", { box = {halfWidth=50, halfHeight=50}} )
 
     -- Load our map

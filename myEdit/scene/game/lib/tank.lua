@@ -39,7 +39,7 @@ function M.new(tank, startAngle, flag)
     --have to use half width/length because of lua
     physics.setGravity(0,0)
 
-    physics.addBody( tank, "dynamic", { box = {halfWidth=50, halfHeight=50}, friction=2, bounce = 0.2, isSensor = true } )
+    physics.addBody( tank, "dynamic", { box = {halfWidth=50, halfHeight=50}, friction=2, bounce = 0.3} )
     --tank.myName = "tank"
     -- ***Mess around with this later
     -- tank.isFixedRotation = true
@@ -49,7 +49,7 @@ function M.new(tank, startAngle, flag)
     local function createBullet() 
         --local bullet = display.newImageRect("scene/game/img/bullet.png", tank.x, tank.y, 5, 5)
         local bullet = display.newCircle(tank.x, tank.y, 5)
-        physics.addBody(bullet, "dynamic", {radius = 5})
+        physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
         bullet.isBullet = true
         bullet.shootBullet = "bullet"
 
@@ -158,6 +158,16 @@ function M.new(tank, startAngle, flag)
         end
     end
     
+    local function collide(event)
+        if event.phase == "began" then
+            moveup, movedown = -moveup, -movedown
+            for i=0,5 do
+                local a = "a"
+            end
+            moveup, movedown = 0, 0
+        end
+    end
+    
     --actual code that defines the movement
     local function enterFrame()
         -- Do this for every frame
@@ -193,6 +203,8 @@ function M.new(tank, startAngle, flag)
 
     --Add key/joystick listeners
     Runtime:addEventListener("key", key)
+
+    tank:addEventListener("collision", collide)
 
     --return tank
     tank.name = flag
