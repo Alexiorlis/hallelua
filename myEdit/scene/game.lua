@@ -63,7 +63,7 @@ function scene:create(event)
 	-- tank.filename = filename
 
     --calling tank (hardcoded)
-    local tank = tank.new(display.newImageRect("scene/game/img/tank.png", 100, 100))
+    local tank = tank.new(display.newImageRect("scene/game/img/tank.png", 100, 100), 90)
     end
 
 --eventListeners

@@ -9,7 +9,7 @@ local composer = require( "composer" )
 -- Define Module
 local M = {}
 
-function M.new(tank, options)
+function M.new(tank, startAngle)
     -- Get the current scene
     local scene = composer.getScene(composer.getSceneName("current"))
 
@@ -17,7 +17,8 @@ function M.new(tank, options)
     --local sounds = scene.sounds
 
     --**Might not need options
-    options = options or {}
+    --options = options or {}
+
 
 	-- Store map placement and hide placeholder
 	--tank.isVisible = false
@@ -27,6 +28,7 @@ function M.new(tank, options)
     -- Load tank
     tank.x = display.contentCenterX
     tank.y = display.contentCenterY+100
+    tank:rotate(startAngle)
 
     --Add physics
     --May need to add more physics later
@@ -42,6 +44,20 @@ function M.new(tank, options)
     --Keyboard controls for direction (left, right, up, down)
     local acceleration, left, right, moveup, movedown, flip = 25, 0, 0, 0, 0, 0
     local lastEvent = {}
+    local turnRadius = 8
+    
+
+    --turns the rotation into a usable angle value
+    local function getAngle(object)
+        
+        if (object.rotation) < 0 then
+            object.rotation = 360
+        end
+        if (object.rotation) > 360 then
+            object.rotation = 0
+        end
+        return (object.rotation)
+    end
     
     -- Sets variables when they keys are pressed
     local function key(event)
@@ -52,13 +68,13 @@ function M.new(tank, options)
         if phase == "down" then
             -- move left
             if "left" == name or "a" == name then
-                left = -acceleration
+                left = -turnRadius
                 --flip = -1
             end
             
             --move right
             if "right" == name or "d" == name then
-                right = acceleration
+                right = turnRadius
                 --flip = 1
             end
 
@@ -97,13 +113,16 @@ function M.new(tank, options)
     local function enterFrame()
         -- Do this for every frame
         local vx, vy = tank:getLinearVelocity()
-        local dx = left + right
-        local dy = moveup + movedown
+        
+        local dx = (moveup + movedown) * math.cos(math.rad(getAngle(tank)))
+        local dy =  (moveup + movedown) * math.sin(math.rad(getAngle(tank)))
         tank:rotate(left)
         tank:rotate(right)
-
+        
+        --test
+        print(getAngle(tank))
         --updates the tank position
-        --tank.x = tank.x + dx
+        tank.x = tank.x + dx
         tank.y = tank.y + dy
 
         --tank.xScale = math.min( 1, math.max( tank.xScale + flip, -1 ) ) 
