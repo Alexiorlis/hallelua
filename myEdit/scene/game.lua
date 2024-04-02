@@ -50,6 +50,11 @@ function scene:create(event)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
+	local wall = display.newImageRect(sceneGroup, "scene/game/map/wall.png", 100, 100)
+	wall.x = display.contentCenterX+500
+    wall.y = display.contentCenterY-100
+	physics.addBody( wall, "static", { box = {halfWidth=50, halfHeight=50}} )
+
     -- Load our map
     --***This is for loading the map that is created and NOT the background
 	-- local filename = event.params.map or "scene/game/map/sandbox.json"
@@ -61,9 +66,9 @@ function scene:create(event)
 	-- map:extend("tank")
 	-- tank = map:findObject("tank")
 	-- tank.filename = filename
-
     --calling tank (hardcoded)
-    local tank = tank.new(display.newImageRect("scene/game/img/tank.png", 100, 100), 90)
+    local tank = tank.new(display.newImageRect("scene/game/img/tank.png", 100, 100), 90 , "tank")
+	--local cpu = tank.new(display.newImageRect("scene/game/img/cpu.png", 100, 100), "" , "cpu")
     end
 
 --eventListeners

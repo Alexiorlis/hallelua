@@ -5,20 +5,18 @@
 --*****MAY NEED TO UNMUTE LATER
 local fx = require( "com.ponywolf.ponyfx" )
 local composer = require( "composer" )
+local physics = require("physics")
+local count = 0
 
 -- Define Module
 local M = {}
 
-function M.new(tank, startAngle)
+function M.new(tank, startAngle, flag)
     -- Get the current scene
     local scene = composer.getScene(composer.getSceneName("current"))
 
     --***for future sound implementation
     --local sounds = scene.sounds
-
-    --**Might not need options
-    --options = options or {}
-
 
 	-- Store map placement and hide placeholder
 	--tank.isVisible = false
@@ -26,16 +24,22 @@ function M.new(tank, startAngle)
 	local x, y = tank.x, tank.y
 
     -- Load tank
-    tank.x = display.contentCenterX
-    tank.y = display.contentCenterY+100
-    tank:rotate(startAngle)
+    if flag == "tank" then
+        tank.x = display.contentCenterX+500
+        tank.y = display.contentCenterY
+        tank:rotate(startAngle)
+    elseif flag == "cpu" then 
+        tank.x = display.contentCenterX-500
+        tank.y = display.contentCenterY
+        tank:rotate(startAngle)
+    end
 
     --Add physics
     --May need to add more physics later
     --have to use half width/length because of lua
     physics.setGravity(0,0)
 
-    physics.addBody( tank, "dynamic", { box = {halfWidth=50, halfHeight=50}, friction=2, isSensor=true } )
+    physics.addBody( tank, "dynamic", { box = {halfWidth=50, halfHeight=50}, friction=2, bounce = 0.2, isSensor = true } )
     --tank.myName = "tank"
     -- ***Mess around with this later
     -- tank.isFixedRotation = true
@@ -59,13 +63,12 @@ function M.new(tank, startAngle)
         bullet:setLinearVelocity(vx, vy)
 
         return bullet
-    end    
+    end 
 
     --Keyboard controls for direction (left, right, up, down)
     local acceleration, left, right, moveup, movedown, flip = 25, 0, 0, 0, 0, 0
     local lastEvent = {}
     local turnRadius = 8
-    
 
     --turns the rotation into a usable angle value
     local function getAngle(object)
@@ -81,71 +84,94 @@ function M.new(tank, startAngle)
     
     -- Sets variables when they keys are pressed
     local function key(event)
-        local phase = event.phase
-        local name = event.keyName
-        if (phase == lastEvent.phase) and (name == lastEvent.keyName) then return false end -- Filter repeating keys
-        -- if phase == "down" refers to a key being pressed down, NOT the direction down (Corona SDK weird)
-        if phase == "down" then
-            -- move left
-            if "left" == name or "a" == name then
-                left = -turnRadius
-                --flip = -1
-            end
+        if flag == "tank" then
+            local phase = event.phase
+            local name = event.keyName
+            if (phase == lastEvent.phase) and (name == lastEvent.keyName) then return false end -- Filter repeating keys
+            -- if phase == "down" refers to a key being pressed down, NOT the direction down (Corona SDK weird)
+            if phase == "down" then
+                -- move left
+                if "left" == name or "a" == name then
+                    left = -turnRadius
+                    --flip = -1
+                end
             
-            --move right
-            if "right" == name or "d" == name then
-                right = turnRadius
-                --flip = 1
-            end
+                --move right
+                if "right" == name or "d" == name then
+                    right = turnRadius
+                    --flip = 1
+                end
 
-            --move up *refers to direction up and not no keys being pressed
-            if "up" == name or "w" == name then
-                moveup = -acceleration
-            end
+                --move up *refers to direction up and not no keys being pressed
+                if "up" == name or "w" == name then
+                    moveup = -acceleration
+                end
 
-            --move down *refers to direction down
-            if "down" == name or "s" == name then
-                movedown = acceleration
-            end
-            -- shoot bullet
-            --move down *refers to direction down
-            if "space" == name then
-                local bullet = createBullet()
-            end
-        --phase == "up" refers to no keys being pressed and not direction up. Basically do nothing
-        elseif phase == "up" then
-            if "left" == name or "a" == name then
-                left = 0
-            end
+                --move down *refers to direction down
+                if "down" == name or "s" == name then
+                    movedown = acceleration
+                end
+                if "space" == name then
+                    local bullet = createBullet()
+                end
+            --phase == "up" refers to no keys being pressed and not direction up. Basically do nothing
+            elseif phase == "up" then
+                if "left" == name or "a" == name then
+                    left = 0
+                end
              
-             if "right" == name or "d" == name then
-                right = 0
-            end
+                if "right" == name or "d" == name then
+                    right = 0
+                end
 
            
-            if "up" == name or "w" == name then
-                moveup = 0
-            end
+                if "up" == name or "w" == name then
+                    moveup = 0
+                end
 
-            if "down" == name or "s" == name then
-                movedown = 0
+                if "down" == name or "s" == name then
+                    movedown = 0
+                end
+            end
+            lastEvent = event
+        end
+    end
+
+    local function move()
+        if flag == "cpu" then 
+            local action = math.random(0,4)
+            if action == 0 then
+                left, right, moveup, movedown= 0, 0, 0, 0
+            elseif action == 1 then
+                moveup = -acceleration
+                left, right, movedown= 0, 0, 0
+            elseif action == 2 then
+                movedown = acceleration
+                left, right, moveup= 0, 0, 0
+            elseif action == 3 then
+                left = -turnRadius
+                right, moveup, movedown= 0, 0, 0
+            elseif action == 4 then
+                right = turnRadius
+                left, moveup, movedown= 0, 0, 0
             end
         end
-        lastEvent = event
     end
     
     --actual code that defines the movement
     local function enterFrame()
         -- Do this for every frame
+        count = count+1
+        if count == 5 then
+            move()
+            count = 0
+        end
         local vx, vy = tank:getLinearVelocity()
-        
         local dx = (moveup + movedown) * math.cos(math.rad(getAngle(tank)))
         local dy =  (moveup + movedown) * math.sin(math.rad(getAngle(tank)))
         tank:rotate(left)
         tank:rotate(right)
-        
-        --test
-        print(getAngle(tank))
+
         --updates the tank position
         tank.x = tank.x + dx
         tank.y = tank.y + dy
@@ -169,7 +195,7 @@ function M.new(tank, startAngle)
     Runtime:addEventListener("key", key)
 
     --return tank
-    tank.name = "tank"
+    tank.name = flag
     tank.type = "tank"
     return tank
 end
