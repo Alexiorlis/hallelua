@@ -11,16 +11,12 @@ local count = 0
 -- Define Module
 local M = {}
 
-function M.new(tank, options, flag)
+function M.new(tank, startAngle, flag)
     -- Get the current scene
     local scene = composer.getScene(composer.getSceneName("current"))
 
     --***for future sound implementation
     --local sounds = scene.sounds
-
-    --**Might not need options
-    options = options or {}
-    flag = flag
 
 	-- Store map placement and hide placeholder
 	--tank.isVisible = false
@@ -31,9 +27,11 @@ function M.new(tank, options, flag)
     if flag == "tank" then
         tank.x = display.contentCenterX+500
         tank.y = display.contentCenterY
+        tank:rotate(startAngle)
     elseif flag == "cpu" then 
         tank.x = display.contentCenterX-500
         tank.y = display.contentCenterY
+        tank:rotate(startAngle)
     end
 
     --Add physics
@@ -50,6 +48,19 @@ function M.new(tank, options, flag)
     --Keyboard controls for direction (left, right, up, down)
     local acceleration, left, right, moveup, movedown, flip = 25, 0, 0, 0, 0, 0
     local lastEvent = {}
+    local turnRadius = 8
+
+    --turns the rotation into a usable angle value
+    local function getAngle(object)
+        
+        if (object.rotation) < 0 then
+            object.rotation = 360
+        end
+        if (object.rotation) > 360 then
+            object.rotation = 0
+        end
+        return (object.rotation)
+    end
     
     -- Sets variables when they keys are pressed
     local function key(event)
@@ -61,13 +72,13 @@ function M.new(tank, options, flag)
             if phase == "down" then
                 -- move left
                 if "left" == name or "a" == name then
-                    left = -acceleration
+                    left = -turnRadius
                     --flip = -1
                 end
             
                 --move right
                 if "right" == name or "d" == name then
-                    right = acceleration
+                    right = turnRadius
                     --flip = 1
                 end
 
@@ -115,10 +126,10 @@ function M.new(tank, options, flag)
                 movedown = acceleration
                 left, right, moveup= 0, 0, 0
             elseif action == 3 then
-                left = -acceleration
+                left = -turnRadius
                 right, moveup, movedown= 0, 0, 0
             elseif action == 4 then
-                right = acceleration
+                right = turnRadius
                 left, moveup, movedown= 0, 0, 0
             end
         end
@@ -133,13 +144,13 @@ function M.new(tank, options, flag)
             count = 0
         end
         local vx, vy = tank:getLinearVelocity()
-        local dx = left + right
-        local dy = moveup + movedown
+        local dx = (moveup + movedown) * math.cos(math.rad(getAngle(tank)))
+        local dy =  (moveup + movedown) * math.sin(math.rad(getAngle(tank)))
         tank:rotate(left)
         tank:rotate(right)
 
         --updates the tank position
-        --tank.x = tank.x + dx
+        tank.x = tank.x + dx
         tank.y = tank.y + dy
 
         --tank.xScale = math.min( 1, math.max( tank.xScale + flip, -1 ) ) 

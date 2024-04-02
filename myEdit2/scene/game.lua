@@ -67,7 +67,7 @@ function scene:create(event)
 	-- tank = map:findObject("tank")
 	-- tank.filename = filename
     --calling tank (hardcoded)
-    local tank = tank.new(display.newImageRect("scene/game/img/cpu.png", 100, 100), "" , "tank")
+    local tank = tank.new(display.newImageRect("scene/game/img/cpu.png", 100, 100), 90 , "tank")
 	--local cpu = tank.new(display.newImageRect("scene/game/img/cpu.png", 100, 100), "" , "cpu")
     end
 
