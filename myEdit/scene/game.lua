@@ -41,8 +41,8 @@ function scene:create(event)
     -- }
 
     --Start physics
+	physics.start()
 	physics.setGravity(0,0)
-    physics.start()
 
 
     -- Loading map (hardcoded for now)
@@ -63,7 +63,7 @@ function scene:create(event)
 	-- tank.filename = filename
 
     --calling tank (hardcoded)
-    local tank = tank.new(display.newImageRect("scene/game/img/tank.png", 5, 10))
+    local tank = tank.new(display.newImageRect("scene/game/img/tank.png", 100, 100))
     end
 
 --eventListeners

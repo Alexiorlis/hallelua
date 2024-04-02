@@ -20,12 +20,11 @@ function M.new(tank, options)
     options = options or {}
 
 	-- Store map placement and hide placeholder
-	tank.isVisible = false
+	--tank.isVisible = false
 	local parent = tank.parent
 	local x, y = tank.x, tank.y
 
     -- Load tank
-    local tank = display.newImageRect("scene/game/img/tank.png", 100, 100)
     tank.x = display.contentCenterX
     tank.y = display.contentCenterY+100
 
@@ -89,7 +88,7 @@ function M.new(tank, options)
 
             if "down" == name or "s" == name then
                 movedown = 0
-            end   
+            end
         end
         lastEvent = event
     end
@@ -100,9 +99,11 @@ function M.new(tank, options)
         local vx, vy = tank:getLinearVelocity()
         local dx = left + right
         local dy = moveup + movedown
+        tank:rotate(left)
+        tank:rotate(right)
 
         --updates the tank position
-        tank.x = tank.x + dx
+        --tank.x = tank.x + dx
         tank.y = tank.y + dy
 
         --tank.xScale = math.min( 1, math.max( tank.xScale + flip, -1 ) ) 
