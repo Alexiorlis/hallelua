@@ -55,6 +55,32 @@ function scene:create(event)
     wall.y = display.contentCenterY-150
 	physics.addBody( wall, "static", { box = {halfWidth=50, halfHeight=50}} )
 
+-- Your code here
+
+-- Rest of your code...
+
+-- Collision detection function
+local function onCollision(event)
+    if ( event.phase == "began" ) then
+        local obj1 = event.object1
+        local obj2 = event.object2
+
+        -- If tank collides with an obstacle
+        if ( ( obj1.myName == "tank" and obj2.myName == "obstacle" ) or
+             ( obj1.myName == "obstacle" and obj2.myName == "tank" ) ) then
+				if obj1.myName == "tank" then
+					obj1.x = obj1.x - 5 -- Move tank to the left
+				else
+					obj2.x = obj2.x - 5 -- Move tank to the left
+				end
+			end
+    end
+end
+scene:addEventListener("collision", onCollision)
+
+
+
+
     -- Load our map
     --***This is for loading the map that is created and NOT the background
 	-- local filename = event.params.map or "scene/game/map/sandbox.json"
@@ -73,5 +99,7 @@ function scene:create(event)
 
 --eventListeners
 scene:addEventListener("create")
+
 --More code will go under this
 return scene
+
