@@ -48,14 +48,14 @@ function M.new(tank, startAngle, flag)
     --bullet function
     local function createBullet() 
         --local bullet = display.newImageRect("scene/game/img/bullet.png", tank.x, tank.y, 5, 5)
-        local bullet = display.newCircle(tank.x, tank.y, 5)
+        local bullet = display.newCircle(tank.x, tank.y, 10)
         physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
         bullet.isBullet = true
         bullet.shootBullet = "bullet"
 
         --Finds direction tank is facing
         local angle = math.rad(tank.rotation)
-        local speed = -1000
+        local speed = -900
         local vx = math.cos(angle) * speed
         local vy = math.sin(angle) * speed
 
@@ -159,11 +159,7 @@ function M.new(tank, startAngle, flag)
     end
     
     local function collide(event)
-        if event.phase == "began" then
-            moveup, movedown = -moveup, -movedown
-            for i=0,5 do
-                local a = "a"
-            end
+        if (event.phase == "began") then
             moveup, movedown = 0, 0
         end
     end
@@ -185,6 +181,24 @@ function M.new(tank, startAngle, flag)
         --updates the tank position
         tank.x = tank.x + dx
         tank.y = tank.y + dy
+
+        local minX = 0
+        local maxX = display.contentWidth
+        local minY = 0
+        local maxY = display.contentHeight
+    
+        -- doesnt allow tank to go past the edge of the screen
+        if tank.x < minX then
+            tank.x = minX
+        elseif tank.x > maxX then
+            tank.x = maxX
+        end
+
+        if tank.y < minY then
+            tank.y = minY
+        elseif tank.y > maxY then
+            tank.y = maxY
+        end
 
         --tank.xScale = math.min( 1, math.max( tank.xScale + flip, -1 ) ) 
     end
