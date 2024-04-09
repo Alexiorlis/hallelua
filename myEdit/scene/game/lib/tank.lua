@@ -45,6 +45,16 @@ function M.new(tank, startAngle, flag)
     -- tank.isFixedRotation = true
 	-- tank.anchorY = 0.77
 
+    -- creating scoreboard
+        local score = 0
+        local scoreText = display.newText("Score: ", 150, 100)
+    
+    -- updates score  -- needs to go on bullet to tank collision -- temporarily on create bullet
+        local function updateScore(value)
+            local score = score + value
+            scoreText.text = "Score: ".. score
+        end
+
     --bullet function
     local function createBullet() 
         --local bullet = display.newImageRect("scene/game/img/bullet.png", tank.x, tank.y, 5, 5)
@@ -58,12 +68,11 @@ function M.new(tank, startAngle, flag)
         local speed = -900
         local vx = math.cos(angle) * speed
         local vy = math.sin(angle) * speed
-
         --applies force to the bullet
         bullet:setLinearVelocity(vx, vy)
-
-        return bullet
     end 
+
+
 
     --Keyboard controls for direction (left, right, up, down)
     local acceleration, left, right, moveup, movedown, flip = 25, 0, 0, 0, 0, 0
