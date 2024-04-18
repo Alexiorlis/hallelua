@@ -6,12 +6,13 @@ local composer = require("composer")
 local fx = require("com.ponywolf.ponyfx")
 local physics = require("physics")
 local json = require( "json" )
---change to "tank" later. this is just for reference for now
-local tank = require("scene.game.lib.tank")
+--change to "blueTank" later. this is just for reference for now
+local blueTank = require("scene.game.lib.blueTank")
+local redTank = require("scene.game.lib.redTank")
 
 --Variables local to scene(scene- Which part of the game you are viewing, ex. the menu, the actual game, ending credits)
 --but in this case, these local variable apply to things that are currently included in the actual game scene
--- local map, tank
+-- local map, blueTank
 
 --Creating Composer for scene
 --Basically this this line is creating the game scene
@@ -65,15 +66,16 @@ function scene:create(event)
 	-- local mapData = json.decodeFile( system.pathForFile( filename, system.ResourceDirectory ) )
 	-- map = tiled.new( mapData, "scene/game/map" )
 
-    -- --**This loads the tank on the map, but is not needed yet since I am hardcoding for testing
+    -- --**This loads the blueTank on the map, but is not needed yet since I am hardcoding for testing
     -- map.extensions = "scene.game.lib."
-	-- map:extend("tank")
-	-- tank = map:findObject("tank")
-	-- tank.filename = filename
-    --calling tank (hardcoded)
-    local tank = tank.new(display.newImageRect("scene/game/img/tank.png", 100, 100), 90 , "tank")
-	--local cpu = tank.new(display.newImageRect("scene/game/img/cpu.png", 100, 100), "" , "cpu")
-    end
+	-- map:extend("blueTank")
+	-- blueTank = map:findObject("blueTank")
+	-- blueTank.filename = filename
+    --calling blueTank (hardcoded)
+    local blueTank = blueTank.new(display.newImageRect("scene/game/img/blueTank.png", 100, 100), 90 , "blueTank")
+	local redTank = redTank.new(display.newImageRect("scene/game/img/redTank.png", 100, 100), 90 , "redTank")
+	--local cpu = blueTank.new(display.newImageRect("scene/game/img/cpu.png", 100, 100), "" , "cpu")
+end
 
 --eventListeners
 scene:addEventListener("create")
