@@ -34,7 +34,7 @@ function M.new(blueTank, startAngle)
     physics.setGravity(0,0)
 
     physics.addBody( blueTank, "dynamic", { box = {halfWidth=50, halfHeight=50}, friction=2, bounce = 0.3} )
-    --blueTank.myName = "blueTank"
+    blueTank.myName = "blueTank"
     -- ***Mess around with this later
     -- blueTank.isFixedRotation = true
 	-- blueTank.anchorY = 0.77
@@ -49,13 +49,29 @@ function M.new(blueTank, startAngle)
             scoreText.text = "Score: ".. score
         end
 
+    --turns the rotation into a usable angle value
+    local function getAngle(object)
+        
+        if (object.rotation) < 0 then
+            object.rotation = 360
+        end
+        if (object.rotation) > 360 then
+            object.rotation = 0
+        end
+        return (object.rotation)
+    end
+
     --bullet function
     local function createBullet() 
         --local bullet = display.newImageRect("scene/game/img/bullet.png", blueTank.x, blueTank.y, 5, 5)
-        local bullet = display.newCircle(blueTank.x, blueTank.y, 10)
+        
+
+        local bullet = display.newCircle(blueTank.x, blueTank.y, 10) --the bullet colliding with the tank is making it stop. make it not
         physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
         bullet.isBullet = true
         bullet.shootBullet = "bullet"
+
+        bullet.myName = "blueBullet"
 
         --Finds direction blueTank is facing
         local angle = math.rad(blueTank.rotation)
@@ -72,28 +88,25 @@ function M.new(blueTank, startAngle)
     --Keyboard controls for direction (left, right, up, down)
     local acceleration, left, right, moveup, movedown, flip = 5, 0, 0, 0, 0, 0
     local lastEvent = {}
-    local turnRadius = 8
+    local turnRadius = 4
 
-    --turns the rotation into a usable angle value
-    local function getAngle(object)
-        
-        if (object.rotation) < 0 then
-            object.rotation = 360
-        end
-        if (object.rotation) > 360 then
-            object.rotation = 0
-        end
-        return (object.rotation)
-    end
+    
     
     -- Sets variables when they keys are pressed
     local function key(event)
         local phase = event.phase
         local name = event.keyName
         if (phase == lastEvent.phase) and (name == lastEvent.keyName) then return false end -- Filter repeating keys
+            
         -- if phase == "down" refers to a key being pressed down, NOT the direction down (Corona SDK weird)
             if phase == "down" then
-            -- move left
+
+                --shoot
+                if "q" == name then
+                    local blueBullet = createBullet()
+                end
+
+                -- move left
                 if "a" == name then
                     left = -turnRadius
                     --flip = -1
@@ -114,10 +127,7 @@ function M.new(blueTank, startAngle)
                 if "s" == name then
                     movedown = acceleration
                 end
-                --shoot
-                if "q" == name then
-                    local bullet = createBullet()
-                end
+                
             --phase == "up" refers to no keys being pressed and not direction up. Basically do nothing
             elseif phase == "up" then
                 if "a" == name then
@@ -161,12 +171,10 @@ function M.new(blueTank, startAngle)
     --     end
     -- end
     
-    local function collide(event)
-        if (event.phase == "began") then
-            moveup, movedown = 0, 0
-        end
-    end
     
+    
+    
+
     --actual code that defines the movement
     local function enterFrame()
         -- Do this for every frame
@@ -175,12 +183,15 @@ function M.new(blueTank, startAngle)
             -- move()
             count = 0
         end
+
+        
+
         local vx, vy = blueTank:getLinearVelocity()
         local dx = (moveup + movedown) * math.cos(math.rad(getAngle(blueTank)))
         local dy =  (moveup + movedown) * math.sin(math.rad(getAngle(blueTank)))
         blueTank:rotate(left)
         blueTank:rotate(right)
-
+        
         --updates the blueTank position
         blueTank.x = blueTank.x + dx
         blueTank.y = blueTank.y + dy
@@ -206,6 +217,18 @@ function M.new(blueTank, startAngle)
         --blueTank.xScale = math.min( 1, math.max( blueTank.xScale + flip, -1 ) ) 
     end
 
+    --tank collision
+    local function blueTankCollide(event)
+        if (event.phase == "began") then
+
+            --dont collide with own bullets
+            
+            if(event.other.myName == "redBullet") then
+                print("Blue Tank hit")
+            end
+        end
+    end
+
     --not sure what this does just yet. I think it makes objects invisible?
     function blueTank:finalize()
     Runtime:removeEventListener( "enterFrame", enterFrame )
@@ -221,7 +244,7 @@ function M.new(blueTank, startAngle)
     --Add key/joystick listeners
     Runtime:addEventListener("key", key)
 
-    blueTank:addEventListener("collision", collide)
+    blueTank:addEventListener("collision", blueTankCollide)
 
     --return blueTank
     blueTank.name = "blueTank"

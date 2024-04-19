@@ -56,6 +56,7 @@ function M.new(redTank, startAngle)
         physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
         bullet.isBullet = true
         bullet.shootBullet = "bullet"
+        bullet.myName = "redBullet"
 
         --Finds direction redTank is facing
         local angle = math.rad(redTank.rotation)
@@ -72,7 +73,7 @@ function M.new(redTank, startAngle)
     --Keyboard controls for direction (left, right, up, down)
     local acceleration, left, right, moveup, movedown, flip = 5, 0, 0, 0, 0, 0
     local lastEvent = {}
-    local turnRadius = 8
+    local turnRadius = 4
 
     --turns the rotation into a usable angle value
     local function getAngle(object)
@@ -116,7 +117,7 @@ function M.new(redTank, startAngle)
                 end
                 --shoot
                 if "/" == name then
-                    local bullet = createBullet()
+                    local redBullet = createBullet()
                 end
             --phase == "up" refers to no keys being pressed and not direction up. Basically do nothing
             elseif phase == "up" then
@@ -161,12 +162,15 @@ function M.new(redTank, startAngle)
     --     end
     -- end
     
-    local function collide(event)
+    local function redTankCollide(event)
         if (event.phase == "began") then
-            moveup, movedown = 0, 0
+            if(event.other.myName == "blueBullet") then
+                print("Red Tank hit")
+            end
         end
     end
     
+
     --actual code that defines the movement
     local function enterFrame()
         -- Do this for every frame
@@ -221,7 +225,7 @@ function M.new(redTank, startAngle)
     --Add key/joystick listeners
     Runtime:addEventListener("key", key)
 
-    redTank:addEventListener("collision", collide)
+    redTank:addEventListener("collision", redTankCollide)
 
     --return redTank
     redTank.name = "redTank"

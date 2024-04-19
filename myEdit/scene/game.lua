@@ -55,7 +55,19 @@ function scene:create(event)
 	wall.x = display.contentCenterX+500
     wall.y = display.contentCenterY-150
 	physics.addBody( wall, "static", { box = {halfWidth=50, halfHeight=50}} )
+	wall.myName = "wall"
 
+	local function wallCollide(event)
+		if (event.phase == "began") then
+
+            --removes bullets on impact with wall
+            if(event.other.myName == "redBullet" or  event.other.myName == "blueBullet") then
+                event.other:removeSelf()
+            end
+        end
+	end
+
+	wall:addEventListener("collision", wallCollide)
 -- Your code here
 
 	
