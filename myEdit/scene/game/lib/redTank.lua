@@ -53,6 +53,7 @@ function M.new(redTank, startAngle)
             scoreText.text = "Blue Score: ".. score
             if score >= 3 then
                 gameOver()
+                display.remove(redTank)
             end
         end
 
@@ -203,7 +204,7 @@ function M.new(redTank, startAngle)
         end
         --redTank.xScale = math.min( 1, math.max( redTank.xScale + flip, -1 ) ) 
     end
-
+    
     --not sure what this does just yet. I think it makes objects invisible?
     function redTank:finalize()
     Runtime:removeEventListener( "enterFrame", enterFrame )

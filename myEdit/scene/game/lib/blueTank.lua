@@ -53,6 +53,7 @@ function M.new(blueTank, startAngle)
             scoreText.text = "Red Score: ".. score
             if score >= 3 then
                 gameOver()
+                display.remove(blueTank)
             end
         end
 
