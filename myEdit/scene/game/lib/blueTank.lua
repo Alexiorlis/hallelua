@@ -64,7 +64,6 @@ function M.new(blueTank, startAngle)
     --bullet function
     local function createBullet() 
         --local bullet = display.newImageRect("scene/game/img/bullet.png", blueTank.x, blueTank.y, 5, 5)
-        
 
         local bullet = display.newCircle(blueTank.x, blueTank.y, 10) --the bullet colliding with the tank is making it stop. make it not
         physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
@@ -150,6 +149,18 @@ function M.new(blueTank, startAngle)
         lastEvent = event
     end
 
+    --tank collision
+    local blueTankNeedsRepositioning = false
+    local function blueTankCollide(event)
+        if (event.phase == "began") then 
+            if(event.other.myName == "redBullet") then
+                updateScore(1)
+                event.other:removeSelf()
+                blueTankNeedsRepositioning = true
+            end
+        end
+    end
+
     --actual code that defines the movement
     local function enterFrame()
         -- Do this for every frame
@@ -158,8 +169,6 @@ function M.new(blueTank, startAngle)
             -- move()
             count = 0
         end
-
-        
 
         local vx, vy = blueTank:getLinearVelocity()
         local dx = (moveup + movedown) * math.cos(math.rad(getAngle(blueTank)))
@@ -188,21 +197,13 @@ function M.new(blueTank, startAngle)
         elseif blueTank.y > maxY then
             blueTank.y = maxY
         end
-
-        --blueTank.xScale = math.min( 1, math.max( blueTank.xScale + flip, -1 ) ) 
-    end
-
-    --tank collision
-    local function blueTankCollide(event)
-        if (event.phase == "began") then
-
-            --dont collide with own bullets
-            
-            if(event.other.myName == "redBullet") then
-                updateScore(1)
-                event.other:removeSelf()
-            end
+        -- Reposition blue tank if needed
+        if blueTankNeedsRepositioning then
+            blueTank.y = display.contentHeight - blueTank.height * 0.5
+            blueTank.x = blueTank.width * 0.5
+            blueTankNeedsRepositioning = false  -- Reset the flag
         end
+        --blueTank.xScale = math.min( 1, math.max( blueTank.xScale + flip, -1 ) ) 
     end
 
     --not sure what this does just yet. I think it makes objects invisible?

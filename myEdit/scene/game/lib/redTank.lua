@@ -141,11 +141,13 @@ function M.new(redTank, startAngle)
         lastEvent = event
     end
     
+    local redTankNeedsRepositioning = false
     local function redTankCollide(event)
         if (event.phase == "began") then
             if(event.other.myName == "blueBullet") then
                 updateScore(1)
                 event.other:removeSelf()
+                redTankNeedsRepositioning = true
             end
         end
     end
@@ -186,7 +188,12 @@ function M.new(redTank, startAngle)
         elseif redTank.y > maxY then
             redTank.y = maxY
         end
-
+            -- Reposition red tank if needed
+        if redTankNeedsRepositioning then
+            redTank.y = display.contentHeight - redTank.height * 0.5
+            redTank.x = display.contentWidth - redTank.width * 1.5
+            redTankNeedsRepositioning = false  -- Reset the flag
+        end
         --redTank.xScale = math.min( 1, math.max( redTank.xScale + flip, -1 ) ) 
     end
 
