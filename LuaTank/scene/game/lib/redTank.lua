@@ -2,7 +2,6 @@
 -- Module/class for redTank
 
 -- Use this as a template to build an in-game redTank
---*****MAY NEED TO UNMUTE LATER
 local fx = require( "com.ponywolf.ponyfx" )
 local composer = require( "composer" )
 local physics = require("physics")
@@ -15,11 +14,6 @@ function M.new(redTank, startAngle)
     -- Get the current scene
     local scene = composer.getScene(composer.getSceneName("current"))
 
-    --***for future sound implementation
-    --local sounds = scene.sounds
-
-	-- Store map placement and hide placeholder
-	--redTank.isVisible = false
 	local parent = redTank.parent
 	local x, y = redTank.x, redTank.y
 
@@ -28,16 +22,9 @@ function M.new(redTank, startAngle)
     redTank.y = display.contentCenterY
     redTank:rotate(startAngle)
 
-    --Add physics
-    --May need to add more physics later
-    --have to use half width/length because of lua
     physics.setGravity(0,0)
 
     physics.addBody( redTank, "dynamic", { radius = 40, friction=2, bounce = 0.3} )
-    --redTank.myName = "redTank"
-    -- ***Mess around with this later
-    -- redTank.isFixedRotation = true
-	-- redTank.anchorY = 0.77
 
     -- creating scoreboard
         local score = 0
@@ -64,7 +51,7 @@ function M.new(redTank, startAngle)
             restartText = display.newText("Tap to restart", display.contentCenterX, display.contentCenterY + 200, native.systemFontBold, 150)
             restartText:addEventListener("tap", restartGame)
         end
-    -- updates score  -- needs to go on bullet to redTank collision -- temporarily on create bullet
+    -- updates score 
     local function updateScore(value)
         max_score = 3
         score = score + value
@@ -79,7 +66,6 @@ function M.new(redTank, startAngle)
 
     --bullet function
     local function createBullet() 
-        --local bullet = display.newImageRect("scene/game/img/bullet.png", redTank.x, redTank.y, 5, 5)
         local bullet = display.newCircle(redTank.x, redTank.y, 10)
         physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
         bullet.isBullet = true
@@ -221,7 +207,6 @@ function M.new(redTank, startAngle)
             redTank.x = display.contentCenterX+1300
             redTankNeedsRepositioning = false  -- Reset the flag
         end
-        --redTank.xScale = math.min( 1, math.max( redTank.xScale + flip, -1 ) ) 
     end
     
     --not sure what this does just yet. I think it makes objects invisible?

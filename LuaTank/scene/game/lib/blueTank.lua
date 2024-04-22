@@ -15,11 +15,6 @@ function M.new(blueTank, startAngle)
     -- Get the current scene
     local scene = composer.getScene(composer.getSceneName("current"))
 
-    --***for future sound implementation
-    --local sounds = scene.sounds
-
-	-- Store map placement and hide placeholder
-	--blueTank.isVisible = false
 	local parent = blueTank.parent
 	local x, y = blueTank.x, blueTank.y
 
@@ -28,16 +23,10 @@ function M.new(blueTank, startAngle)
     blueTank.y = display.contentCenterY
     blueTank:rotate(startAngle)
 
-    --Add physics
-    --May need to add more physics later
-    --have to use half width/length because of lua
     physics.setGravity(0,0)
 
     physics.addBody( blueTank, "dynamic", { radius = 40, friction=2, bounce = 0.3} )
     blueTank.myName = "blueTank"
-    -- ***Mess around with this later
-    -- blueTank.isFixedRotation = true
-	-- blueTank.anchorY = 0.77
 
     -- creating scoreboard
         local score = 0
@@ -65,12 +54,12 @@ function M.new(blueTank, startAngle)
             restartText:addEventListener("tap", restartGame)
         end
 
-    -- updates score  -- needs to go on bullet to blueTank collision -- temporarily on create bullet
+    -- updates score 
     local function updateScore(value)
         max_score = 3
         score = score + value
         if score <= max_score then
-        scoreText.text = "Blue Score: ".. score
+        scoreText.text = "Red Score: ".. score
         end
 
         if score == 3 then
@@ -91,8 +80,6 @@ function M.new(blueTank, startAngle)
 
     --bullet function
     local function createBullet() 
-        --local bullet = display.newImageRect("scene/game/img/bullet.png", blueTank.x, blueTank.y, 5, 5)
-
         local bullet = display.newCircle(blueTank.x, blueTank.y, 10) 
         physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
         bullet.isBullet = true
@@ -230,10 +217,8 @@ function M.new(blueTank, startAngle)
             blueTank.x = display.contentCenterX-1300
             blueTankNeedsRepositioning = false  -- Reset the flag
         end
-        --blueTank.xScale = math.min( 1, math.max( blueTank.xScale + flip, -1 ) ) 
     end
 
-    --not sure what this does just yet. I think it makes objects invisible?
     function blueTank:finalize()
     Runtime:removeEventListener( "enterFrame", enterFrame )
     Runtime:removeEventListener( "key", key )
