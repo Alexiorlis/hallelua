@@ -41,12 +41,12 @@ function M.new(blueTank, startAngle)
 
     -- creating scoreboard
         local score = 0
-        local scoreText = display.newText("Red Score: ", 200, 100)
+        local scoreText = display.newText("Score: ", 150, 100)
     
     -- updates score  -- needs to go on bullet to blueTank collision -- temporarily on create bullet
         local function updateScore(value)
-            score = score + value
-            scoreText.text = "Red Score: ".. score
+            local score = score + value
+            scoreText.text = "Score: ".. score
         end
 
     --turns the rotation into a usable angle value
@@ -150,6 +150,31 @@ function M.new(blueTank, startAngle)
         lastEvent = event
     end
 
+    -- local function move()
+    --     if flag == "cpu" then 
+    --         local action = math.random(0,4)
+    --         if action == 0 then
+    --             left, right, moveup, movedown= 0, 0, 0, 0
+    --         elseif action == 1 then
+    --             moveup = -acceleration
+    --             left, right, movedown= 0, 0, 0
+    --         elseif action == 2 then
+    --             movedown = acceleration
+    --             left, right, moveup= 0, 0, 0
+    --         elseif action == 3 then
+    --             left = -turnRadius
+    --             right, moveup, movedown= 0, 0, 0
+    --         elseif action == 4 then
+    --             right = turnRadius
+    --             left, moveup, movedown= 0, 0, 0
+    --         end
+    --     end
+    -- end
+    
+    
+    
+    
+
     --actual code that defines the movement
     local function enterFrame()
         -- Do this for every frame
@@ -195,12 +220,11 @@ function M.new(blueTank, startAngle)
     --tank collision
     local function blueTankCollide(event)
         if (event.phase == "began") then
-
-            --dont collide with own bullets
             
+            --dont collide with own bullets
             if(event.other.myName == "redBullet") then
-                updateScore(1)
                 event.other:removeSelf()
+                print("Blue Tank hit")
             end
         end
     end

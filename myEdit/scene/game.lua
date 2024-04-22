@@ -55,7 +55,6 @@ function scene:create(event)
 
 	local function wallCollide(event)
 		if (event.phase == "began") then
-
             --removes bullets on impact with wall
             if(event.other.myName == "redBullet" or  event.other.myName == "blueBullet") then
                 event.other:removeSelf()
