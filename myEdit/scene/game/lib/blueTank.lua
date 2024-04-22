@@ -33,7 +33,7 @@ function M.new(blueTank, startAngle)
     --have to use half width/length because of lua
     physics.setGravity(0,0)
 
-    physics.addBody( blueTank, "dynamic", { box = {halfWidth=40, halfHeight=40}, friction=2, bounce = 0.3} )
+    physics.addBody( blueTank, "dynamic", { radius = 40, friction=2, bounce = 0.3} )
     blueTank.myName = "blueTank"
     -- ***Mess around with this later
     -- blueTank.isFixedRotation = true
