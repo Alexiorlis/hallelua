@@ -220,10 +220,10 @@ function M.new(blueTank, startAngle)
     --tank collision
     local function blueTankCollide(event)
         if (event.phase == "began") then
-
-            --dont collide with own bullets
             
+            --dont collide with own bullets
             if(event.other.myName == "redBullet") then
+                event.other:removeSelf()
                 print("Blue Tank hit")
             end
         end

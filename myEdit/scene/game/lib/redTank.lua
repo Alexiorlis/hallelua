@@ -40,13 +40,13 @@ function M.new(redTank, startAngle)
 	-- redTank.anchorY = 0.77
 
     -- creating scoreboard
-        local score = 0
-        local scoreText = display.newText("Score: ", 150, 100)
+        --local score = 0
+        --local scoreText = display.newText("Score: ", 150, 200)
     
     -- updates score  -- needs to go on bullet to redTank collision -- temporarily on create bullet
         local function updateScore(value)
             local score = score + value
-            scoreText.text = "Score: ".. score
+            scoreText.text = score
         end
 
     --bullet function
@@ -165,6 +165,7 @@ function M.new(redTank, startAngle)
     local function redTankCollide(event)
         if (event.phase == "began") then
             if(event.other.myName == "blueBullet") then
+                event.other:removeSelf()
                 print("Red Tank hit")
             end
         end
