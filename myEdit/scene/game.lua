@@ -51,11 +51,7 @@ function scene:create(event)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
-	local wall = display.newImageRect(sceneGroup, "scene/game/map/wall.png", 100, 100)
-	wall.x = display.contentCenterX+500
-    wall.y = display.contentCenterY-150
-	physics.addBody( wall, "static", { box = {halfWidth=50, halfHeight=50}} )
-	wall.myName = "wall"
+	local wallTable = {}
 
 	local function wallCollide(event)
 		if (event.phase == "began") then
@@ -67,7 +63,18 @@ function scene:create(event)
         end
 	end
 
-	wall:addEventListener("collision", wallCollide)
+	local function createWalls()
+		local wall = display.newImageRect(sceneGroup, "scene/game/map/wall.png", 100, 100)
+		table.insert(wallTable, wall)
+		wall.x = display.contentCenterX+500
+    	wall.y = display.contentCenterY-150
+		physics.addBody( wall, "static", { box = {halfWidth=50, halfHeight=50}} )
+		wall.myName = "wall"
+		wall:addEventListener("collision", wallCollide)
+	end
+
+	createWalls()
+
 -- Your code here
 
 	
