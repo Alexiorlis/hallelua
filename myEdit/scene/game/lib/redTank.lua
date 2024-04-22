@@ -41,12 +41,19 @@ function M.new(redTank, startAngle)
 
     -- creating scoreboard
         local score = 0
-        local scoreText = display.newText("Blue Score: ", 200, 200)
+        local scoreText = display.newText("Blue Score: ", 200, 100)
     
+        local function gameOver()
+            local gameOverText = display.newText("Game Over", display.contentCenterX, display.contentCenterY, native.systemFontBold, 550)
+        end
+
     -- updates score  -- needs to go on bullet to redTank collision -- temporarily on create bullet
         local function updateScore(value)
             score = score + value
             scoreText.text = "Blue Score: ".. score
+            if score >= 3 then
+                gameOver()
+            end
         end
 
     --bullet function

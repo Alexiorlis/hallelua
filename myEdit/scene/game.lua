@@ -65,8 +65,8 @@ function scene:create(event)
 
 	local function createWalls()
 		local wallArray = {}
-		for i=0,12 do
-			for j=0,7 do
+		for i=0,9 do
+			for j=0,9 do
 				if (i==0 and (j==0 or j==1 or j==5 or j==6)) or
 				(i==1 and (j==4)) or (i==2 and (j==2)) or (i==3 and (j==3 or j==6)) or
 				(i==4 and (j==0 or j==1 or j==5)) or (i==5 and (j==5)) or (i==6 and (j==2 or j==5)) or

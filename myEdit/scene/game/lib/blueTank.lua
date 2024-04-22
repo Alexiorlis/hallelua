@@ -41,12 +41,19 @@ function M.new(blueTank, startAngle)
 
     -- creating scoreboard
         local score = 0
-        local scoreText = display.newText("Red Score: ", 200, 100)
-    
+        local scoreText = display.newText("Red Score: ", 2600, 100)
+
+        local function gameOver()
+            local gameOverText = display.newText("Game Over", display.contentCenterX, display.contentCenterY, native.systemFontBold, 550)
+        end
+
     -- updates score  -- needs to go on bullet to blueTank collision -- temporarily on create bullet
         local function updateScore(value)
             score = score + value
             scoreText.text = "Red Score: ".. score
+            if score >= 3 then
+                gameOver()
+            end
         end
 
     --turns the rotation into a usable angle value
@@ -65,7 +72,7 @@ function M.new(blueTank, startAngle)
     local function createBullet() 
         --local bullet = display.newImageRect("scene/game/img/bullet.png", blueTank.x, blueTank.y, 5, 5)
 
-        local bullet = display.newCircle(blueTank.x, blueTank.y, 10) --the bullet colliding with the tank is making it stop. make it not
+        local bullet = display.newCircle(blueTank.x, blueTank.y, 10) 
         physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
         bullet.isBullet = true
         bullet.shootBullet = "bullet"
