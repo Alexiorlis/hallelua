@@ -207,8 +207,8 @@ function M.new(blueTank, startAngle)
         end
         -- Reposition blue tank if needed
         if blueTankNeedsRepositioning then
-            blueTank.y = display.contentHeight - blueTank.height * 0.5
-            blueTank.x = blueTank.width * 0.5
+            blueTank.y = display.contentCenterY
+            blueTank.x = display.contentCenterX-1300
             blueTankNeedsRepositioning = false  -- Reset the flag
         end
         --blueTank.xScale = math.min( 1, math.max( blueTank.xScale + flip, -1 ) ) 

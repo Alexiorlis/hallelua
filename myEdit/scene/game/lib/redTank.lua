@@ -198,8 +198,8 @@ function M.new(redTank, startAngle)
         end
             -- Reposition red tank if needed
         if redTankNeedsRepositioning then
-            redTank.y = display.contentHeight - redTank.height * 0.5
-            redTank.x = display.contentWidth - redTank.width * 1.5
+            redTank.y = display.contentCenterY
+            redTank.x = display.contentCenterX+1300
             redTankNeedsRepositioning = false  -- Reset the flag
         end
         --redTank.xScale = math.min( 1, math.max( redTank.xScale + flip, -1 ) ) 
