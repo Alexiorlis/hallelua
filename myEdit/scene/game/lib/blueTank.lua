@@ -43,20 +43,40 @@ function M.new(blueTank, startAngle)
         local score = 0
         local scoreText = display.newText("Red Score: ", 2600, 100)
 
-        local function gameOver()
-            local gameOverText = display.newText("Game Over", display.contentCenterX, display.contentCenterY, native.systemFontBold, 550)
-        end
+        local blueTankNeedsRepositioning = falseWW
+        local function restartGame()
+            -- reset game variables, clear the screen, and restart gameplay
+            score = 0
+            scoreText.text = "Red Score: 0"
+            gameOverText:removeSelf()
+            restartText:removeSelf()
 
-    -- updates score  -- needs to go on bullet to blueTank collision -- temporarily on create bullet
-        local function updateScore(value)
-            score = score + value
-            scoreText.text = "Red Score: ".. score
-            if score >= 3 then
-                gameOver()
-                display.remove(blueTank)
+            blueTankNeedsRepositioning = true
+            if blueTankNeedsRepositioning then
+                blueTank.y = display.contentCenterY
+                blueTank.x = display.contentCenterX-1300
+                blueTankNeedsRepositioning = false  -- Reset the flag  
             end
         end
 
+        local function gameOver()
+            gameOverText = display.newText("Game Over", display.contentCenterX, display.contentCenterY, native.systemFontBold, 400)
+            restartText = display.newText("Tap to restart", display.contentCenterX, display.contentCenterY + 200, native.systemFontBold, 150)
+            restartText:addEventListener("tap", restartGame)
+        end
+
+    -- updates score  -- needs to go on bullet to blueTank collision -- temporarily on create bullet
+    local function updateScore(value)
+        max_score = 3
+        score = score + value
+        if score <= max_score then
+        scoreText.text = "Blue Score: ".. score
+        end
+
+        if score == 3 then
+            gameOver()
+        end
+    end
     --turns the rotation into a usable angle value
     local function getAngle(object)
         
@@ -158,7 +178,6 @@ function M.new(blueTank, startAngle)
     end
 
     --tank collision
-    local blueTankNeedsRepositioning = false
     local function blueTankCollide(event)
         if (event.phase == "began") then 
             if(event.other.myName == "redBullet") then
