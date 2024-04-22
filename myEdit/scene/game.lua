@@ -84,9 +84,8 @@ function scene:create(event)
 	-- blueTank = map:findObject("blueTank")
 	-- blueTank.filename = filename
     --calling blueTank (hardcoded)
-    local blueTank = blueTank.new(display.newImageRect("scene/game/img/blueTank.png", 100, 100), 90 , "blueTank")
-	local redTank = redTank.new(display.newImageRect("scene/game/img/redTank.png", 100, 100), 90 , "redTank")
-	--local cpu = blueTank.new(display.newImageRect("scene/game/img/cpu.png", 100, 100), "" , "cpu")
+    local blueTank = blueTank.new(display.newImageRect("scene/game/img/blueTank.png", 100, 100), 90)
+	local redTank = redTank.new(display.newImageRect("scene/game/img/redTank.png", 100, 100), 90)
 end
 
 --eventListeners

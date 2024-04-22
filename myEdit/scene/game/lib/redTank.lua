@@ -41,12 +41,12 @@ function M.new(redTank, startAngle)
 
     -- creating scoreboard
         local score = 0
-        local scoreText = display.newText("Score: ", 150, 100)
+        local scoreText = display.newText("Blue Score: ", 200, 200)
     
     -- updates score  -- needs to go on bullet to redTank collision -- temporarily on create bullet
         local function updateScore(value)
-            local score = score + value
-            scoreText.text = "Score: ".. score
+            score = score + value
+            scoreText.text = "Blue Score: ".. score
         end
 
     --bullet function
@@ -140,32 +140,12 @@ function M.new(redTank, startAngle)
             end
         lastEvent = event
     end
-
-    -- local function move()
-    --     if flag == "cpu" then 
-    --         local action = math.random(0,4)
-    --         if action == 0 then
-    --             left, right, moveup, movedown= 0, 0, 0, 0
-    --         elseif action == 1 then
-    --             moveup = -acceleration
-    --             left, right, movedown= 0, 0, 0
-    --         elseif action == 2 then
-    --             movedown = acceleration
-    --             left, right, moveup= 0, 0, 0
-    --         elseif action == 3 then
-    --             left = -turnRadius
-    --             right, moveup, movedown= 0, 0, 0
-    --         elseif action == 4 then
-    --             right = turnRadius
-    --             left, moveup, movedown= 0, 0, 0
-    --         end
-    --     end
-    -- end
     
     local function redTankCollide(event)
         if (event.phase == "began") then
             if(event.other.myName == "blueBullet") then
-                print("Red Tank hit")
+                updateScore(1)
+                event.other:removeSelf()
             end
         end
     end
