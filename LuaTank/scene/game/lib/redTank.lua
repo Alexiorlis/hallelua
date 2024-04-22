@@ -64,8 +64,25 @@ function M.new(redTank, startAngle)
         end
     end
 
-    --bullet function
+    local bulletCount = 0
+    
+    -- Define a variable to track the last time a bullet was fired
+    local lastBulletTime = 0
+    local cooldownDuration = 500  
+
+    -- Define a function to reset the bullet count after the cooldown duration
+    local function resetBulletCount()
+        bulletCount = 0
+    end
+
+    -- bullet function
     local function createBullet() 
+        -- Check if enough time has elapsed since the last bullet was fired
+        local currentTime = system.getTimer()
+        if currentTime - lastBulletTime < cooldownDuration then
+            return 
+        end
+
         local bullet = display.newCircle(redTank.x, redTank.y, 10)
         physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
         bullet.isBullet = true
@@ -80,8 +97,12 @@ function M.new(redTank, startAngle)
         local vy = math.sin(angle) * speed
         --applies force to the bullet
         bullet:setLinearVelocity(vx, vy)
-    end 
 
+        lastBulletTime = currentTime
+        bulletCount = bulletCount + 1
+
+        timer.performWithDelay(cooldownDuration, resetBulletCount)
+    end 
 
 
     --Keyboard controls for direction (left, right, up, down)

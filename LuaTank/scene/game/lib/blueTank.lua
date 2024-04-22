@@ -78,8 +78,24 @@ function M.new(blueTank, startAngle)
         return (object.rotation)
     end
 
+    local bulletCount = 0
+    
+    -- Define a variable to track the last time a bullet was fired
+    local lastBulletTime = 0
+    local cooldownDuration = 500  
+
+    -- Define a function to reset the bullet count after the cooldown duration
+    local function resetBulletCount()
+        bulletCount = 0
+    end
+    
     --bullet function
     local function createBullet() 
+        local currentTime = system.getTimer()
+        if currentTime - lastBulletTime < cooldownDuration then
+            return 
+        end
+
         local bullet = display.newCircle(blueTank.x, blueTank.y, 10) 
         physics.addBody(bullet, "dynamic", {radius = 5, isSensor = true})
         bullet.isBullet = true
@@ -95,6 +111,11 @@ function M.new(blueTank, startAngle)
         local vy = math.sin(angle) * speed
         --applies force to the bullet
         bullet:setLinearVelocity(vx, vy)
+        
+        lastBulletTime = currentTime
+        bulletCount = bulletCount + 1
+
+        timer.performWithDelay(cooldownDuration, resetBulletCount)
     end 
 
 
@@ -219,6 +240,7 @@ function M.new(blueTank, startAngle)
         end
     end
 
+    --not sure what this does just yet. I think it makes objects invisible?
     function blueTank:finalize()
     Runtime:removeEventListener( "enterFrame", enterFrame )
     Runtime:removeEventListener( "key", key )
