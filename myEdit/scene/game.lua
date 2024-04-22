@@ -64,13 +64,37 @@ function scene:create(event)
 	end
 
 	local function createWalls()
-		local wall = display.newImageRect(sceneGroup, "scene/game/map/wall.png", 100, 100)
-		table.insert(wallTable, wall)
-		wall.x = display.contentCenterX+500
-    	wall.y = display.contentCenterY-150
-		physics.addBody( wall, "static", { box = {halfWidth=50, halfHeight=50}} )
-		wall.myName = "wall"
-		wall:addEventListener("collision", wallCollide)
+		local wallArray = {}
+		for i=0,12 do
+			for j=0,7 do
+				if (i==0 and (j==0 or j==1 or j==5 or j==6)) or
+				(i==1 and (j==4)) or (i==2 and (j==2)) or (i==3 and (j==3 or j==6)) or
+				(i==4 and (j==0 or j==1 or j==5)) or (i==5 and (j==5)) or (i==6 and (j==2 or j==5)) or
+				(i==7 and (j==0)) or (i==8 and (j==4)) or (i==9 and (j==2 or j==3)) or
+				(i==11 and (j==0 or j==1 or j==6 or j==7)) or (i==12 and (j==2)) then
+					for k=1,4 do
+						local wall = display.newImageRect(sceneGroup, "scene/game/map/wall.png", 100, 100)
+						table.insert(wallTable, wall)
+						if k==1 then
+							wall.x = display.contentCenterX + (100*i)
+    						wall.y = display.contentCenterY + (100*j)
+						elseif k==2 then
+							wall.x = display.contentCenterX - (100*i)
+    						wall.y = display.contentCenterY + (100*j)
+						elseif k==3 then
+							wall.x = display.contentCenterX + (100*i)
+    						wall.y = display.contentCenterY - (100*j)
+						elseif k==4 then
+							wall.x = display.contentCenterX - (100*i)
+    						wall.y = display.contentCenterY - (100*j)
+						end
+						physics.addBody( wall, "static", { box = {halfWidth=50, halfHeight=50}} )
+						wall.myName = "wall"
+						wall:addEventListener("collision", wallCollide)
+					end
+				end
+			end
+		end
 	end
 
 	createWalls()
@@ -91,8 +115,8 @@ function scene:create(event)
 	-- blueTank = map:findObject("blueTank")
 	-- blueTank.filename = filename
     --calling blueTank (hardcoded)
-    local blueTank = blueTank.new(display.newImageRect("scene/game/img/blueTank.png", 100, 100), 90)
-	local redTank = redTank.new(display.newImageRect("scene/game/img/redTank.png", 100, 100), 90)
+    local blueTank = blueTank.new(display.newImageRect("scene/game/img/blueTank.png", 80, 80), 180)
+	local redTank = redTank.new(display.newImageRect("scene/game/img/redTank.png", 80, 80), 0)
 end
 
 --eventListeners

@@ -24,7 +24,7 @@ function M.new(redTank, startAngle)
 	local x, y = redTank.x, redTank.y
 
     -- Load redTank
-    redTank.x = display.contentCenterX+500
+    redTank.x = display.contentCenterX+1300
     redTank.y = display.contentCenterY
     redTank:rotate(startAngle)
 
@@ -33,7 +33,7 @@ function M.new(redTank, startAngle)
     --have to use half width/length because of lua
     physics.setGravity(0,0)
 
-    physics.addBody( redTank, "dynamic", { box = {halfWidth=50, halfHeight=50}, friction=2, bounce = 0.3} )
+    physics.addBody( redTank, "dynamic", { box = {halfWidth=40, halfHeight=40}, friction=2, bounce = 0.3} )
     --redTank.myName = "redTank"
     -- ***Mess around with this later
     -- redTank.isFixedRotation = true

@@ -24,7 +24,7 @@ function M.new(blueTank, startAngle)
 	local x, y = blueTank.x, blueTank.y
 
     -- Load blueTank
-    blueTank.x = display.contentCenterX-500
+    blueTank.x = display.contentCenterX-1300
     blueTank.y = display.contentCenterY
     blueTank:rotate(startAngle)
 
@@ -33,7 +33,7 @@ function M.new(blueTank, startAngle)
     --have to use half width/length because of lua
     physics.setGravity(0,0)
 
-    physics.addBody( blueTank, "dynamic", { box = {halfWidth=50, halfHeight=50}, friction=2, bounce = 0.3} )
+    physics.addBody( blueTank, "dynamic", { box = {halfWidth=40, halfHeight=40}, friction=2, bounce = 0.3} )
     blueTank.myName = "blueTank"
     -- ***Mess around with this later
     -- blueTank.isFixedRotation = true
